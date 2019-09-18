@@ -14,15 +14,7 @@ object RsaCoder {
   private val eulerFunctionValue = (p - BigInteger.ONE) * (q - BigInteger.ONE)
 
   private val publicExponent = BigInteger.valueOf(65537)
-  private val secretExponent = computeSecretExponent()
-
-  private fun computeSecretExponent(): BigInteger {
-    var m = BigInteger.ONE
-
-    while ((m * eulerFunctionValue + BigInteger.ONE) % publicExponent != BigInteger.ZERO) m++
-
-    return (m * eulerFunctionValue + BigInteger.ONE) / publicExponent
-  }
+  private val secretExponent = MathHelper.inverse(publicExponent, eulerFunctionValue)
 
   fun encode(rawString: String): BigInteger {
     val bytes = rawString.toByteArray()
